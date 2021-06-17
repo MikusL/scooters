@@ -4,8 +4,7 @@ namespace Data
 {
     public interface ICalculations
     {
-        IScooterService ScooterService { get; set; }
-        public decimal PriceCap { get; set; }
+        public IScooterService ScooterService { get; set; }
 
         decimal CalculateIncome(int? year, bool includeNotCompletedRentals, IList<RentedUnit> rentHistory);
 

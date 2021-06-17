@@ -46,7 +46,7 @@ namespace Scooters
         {
             if (ScooterList.Count < 1)
             {
-                throw new EmptyList("The scooter list is empty."); 
+                throw new EmptyHistoryException("The scooter list is empty."); 
             }
 
             return ScooterList;

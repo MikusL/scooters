@@ -5,7 +5,6 @@ namespace Data
     public interface IScooterService
     {
         public IList<Scooter> ScooterList { get; set; }
-
         /// <summary>
         /// Add scooter.
         /// </summary>

@@ -24,13 +24,15 @@ namespace Scooters
 
         public void StartRent(string scooterId)
         {
-            if (ScooterService.GetScooterById(scooterId).IsRented)
+            var scooter = ScooterService.GetScooterById(scooterId);
+
+            if (scooter.IsRented)
             {
                 throw new ScooterIsRented("The scooter is being rented.");
             }
 
-            ScooterService.GetScooterById(scooterId).IsRented = true;
-            RentHistory.Add(new RentedUnit(_transId++, scooterId, DateTime.Now));
+            scooter.IsRented = true;
+            RentHistory.Add(new RentedUnit(_transId++, scooterId, DateTime.Now, scooter.PricePerMinute));
         }
 
         public void EndRent(string scooterId)
@@ -41,7 +43,7 @@ namespace Scooters
                 {
                     ScooterService.GetScooterById(scooterId).IsRented = false;
                     t.EndTime = DateTime.Now;
-                    t.Price = Calculations.CalculatePrice(t);
+                    t.TotalPrice = Calculations.CalculatePrice(t);
                     return;
                 }
             }
@@ -53,7 +55,7 @@ namespace Scooters
         {
             if (RentHistory.Count < 1)
             {
-                throw new EmptyList("The rent history is empty.");
+                throw new EmptyHistoryException("The rent history is empty.");
             }
 
             var result = Calculations.CalculateIncome(year, includeNotCompletedRentals, RentHistory);

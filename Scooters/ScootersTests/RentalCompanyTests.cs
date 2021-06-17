@@ -94,7 +94,7 @@ namespace ScootersTests
         public void CalculateIncome_EmptyRentHistory_ThrowsExceptionEmptyList()
         {
             // Assert
-            Assert.ThrowsException<EmptyList>(() => _rentalCompany.CalculateIncome(null,true));
+            Assert.ThrowsException<EmptyHistoryException>(() => _rentalCompany.CalculateIncome(null,true));
         }
 
         [TestMethod]
@@ -108,8 +108,7 @@ namespace ScootersTests
             _rentalCompany.StartRent(scooterId);
             _rentalCompany.EndRent(scooterId);
             _rentalCompany.RentHistory[0].StartTime = DateTime.Now.AddHours(-1);
-            _rentalCompany.RentHistory[0].Price = 0;
-            _rentalCompany.RentHistory[0].Price =
+            _rentalCompany.RentHistory[0].TotalPrice =
                 _rentalCompany.Calculations.CalculatePrice(_rentalCompany.RentHistory[0]);
             // Assert
             Assert.AreEqual(target, _rentalCompany.CalculateIncome(null,true));

@@ -7,11 +7,11 @@ namespace Scooters
     public class Calculations : ICalculations
     {
         public IScooterService ScooterService { get; set; }
-        public decimal PriceCap { get; set; }
+        private decimal _priceCap;
 
         public Calculations(decimal priceCap, IScooterService scooterService)
         {
-            PriceCap = priceCap;
+            _priceCap = priceCap;
             ScooterService = scooterService;
         }
 
@@ -43,16 +43,16 @@ namespace Scooters
 
             if (!include)
             {
-                if (rentedUnit.Price != 0)
+                if (rentedUnit.TotalPrice != 0)
                 {
-                    result += rentedUnit.Price;
+                    result += rentedUnit.TotalPrice;
                 }
             }
             else
             {
-                if (rentedUnit.Price != 0)
+                if (rentedUnit.TotalPrice != 0)
                 {
-                    result += rentedUnit.Price;
+                    result += rentedUnit.TotalPrice;
                 }
                 else
                 {
@@ -66,7 +66,7 @@ namespace Scooters
         public decimal CalculatePrice(RentedUnit t)
         {
             decimal result = 0;
-            var minutesUntilCap = PriceCap / ScooterService.GetScooterById(t.ScooterId).PricePerMinute;
+            var minutesUntilCap = _priceCap / t.PricePerMinute;
             var resetTime = new DateTime(t.StartTime.Year, t.StartTime.Month, t.StartTime.Day+1,0,0,0);
             var tempTime = t.StartTime;
             var totalTimeUsed = (decimal)t.EndTime.Subtract(t.StartTime).TotalMinutes;
@@ -75,7 +75,7 @@ namespace Scooters
                 TimeUntilReset(resetTime,tempTime) < totalTimeUsed)
             {
                 result += TimeUntilReset(resetTime,tempTime) *
-                          ScooterService.GetScooterById(t.ScooterId).PricePerMinute;
+                          t.PricePerMinute;
                 totalTimeUsed -= TimeUntilReset(resetTime,tempTime);
                 tempTime = resetTime;
                 resetTime = resetTime.AddDays(1);
@@ -83,7 +83,7 @@ namespace Scooters
             //if totalTimeUsed is larger than time until reset (goes over reset time)
             while (TimeUntilReset(resetTime,tempTime) < totalTimeUsed)
             {
-                result += PriceCap;
+                result += _priceCap;
                 totalTimeUsed -= TimeUntilReset(resetTime,tempTime);
                 tempTime = resetTime;
                 resetTime = resetTime.AddDays(1);
@@ -91,13 +91,13 @@ namespace Scooters
             //if totalTimeUsed is larger than minutesUntilCap (at this point, it's smaller than reset time, only equal)
             if (totalTimeUsed >= minutesUntilCap)
             {
-                result += PriceCap;
+                result += _priceCap;
             }
             //else it doesn't reach minutesUntilCap and needs to be calculated
             else
             {
                 result += totalTimeUsed *
-                          ScooterService.GetScooterById(t.ScooterId).PricePerMinute;
+                          t.PricePerMinute;
             }
 
             return Math.Round(result,2);

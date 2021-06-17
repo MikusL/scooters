@@ -4,11 +4,9 @@ namespace Data
 {
     public interface IRentalCompany
     {
-        IList<RentedUnit> RentHistory { get; set; }
-        private static int TransId { get; set; }
-        IScooterService ScooterService { get; set; }
-        ICalculations Calculations { get; set; }
-
+        public IList<RentedUnit> RentHistory { get; set; }
+        public IScooterService ScooterService { get; set; }
+        public ICalculations Calculations { get; set; }
         /// <summary>
         /// Name of the company.
         /// </summary>

@@ -93,7 +93,7 @@ namespace ScootersTests
         public void GetScooters_EmptyList_ThrowsExceptionEmptyList()
         {
             // Assert
-            Assert.ThrowsException<EmptyList>(() => _scooterService.GetScooters());
+            Assert.ThrowsException<EmptyHistoryException>(() => _scooterService.GetScooters());
         }
 
         [TestMethod]
